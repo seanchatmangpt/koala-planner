@@ -1,7 +1,6 @@
 use super::*;
 use std::{
-    cell::RefCell,
-    collections::{BTreeSet, HashMap, HashSet},
+    collections::HashSet,
     rc::Rc,
 };
 
@@ -32,7 +31,7 @@ pub fn progress(tn: Rc<HTN>, state: Rc<HashSet<u32>>) -> Vec<NodeExpansion> {
                             method.name.clone(),
                         ),
                         tn: new_tn,
-                        states: vec![state.clone()],
+                        states: vec![state.clone()]
                     });
                 }
             }
@@ -56,7 +55,7 @@ pub fn progress(tn: Rc<HTN>, state: Rc<HashSet<u32>>) -> Vec<NodeExpansion> {
                                 a.cost,
                             ),
                             tn: new_tn,
-                            states: new_states,
+                            states: new_states
                         });
                     }
                 }
@@ -70,10 +69,10 @@ pub fn progress(tn: Rc<HTN>, state: Rc<HashSet<u32>>) -> Vec<NodeExpansion> {
 pub struct NodeExpansion {
     pub connection_label: ConnectionLabel,
     pub tn: Rc<HTN>,
-    pub states: Vec<Rc<HashSet<u32>>>,
+    pub states: Vec<Rc<HashSet<u32>>>
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum ConnectionLabel {
     Execution(String, u32),
     // task name - method name
@@ -99,8 +98,8 @@ impl ConnectionLabel {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{domain_description::DomainTasks, task_network::Method};
-    use std::collections::HashMap;
+    use crate::{domain_description::DomainTasks, task_network::{Method, PrimitiveAction}};
+    use std::collections::{BTreeSet, HashMap};
 
     #[test]
     pub fn expansion_correctness_test() {
