@@ -6,6 +6,7 @@
 mod handlers;
 mod oracle;
 mod plan;
+mod problem;
 
 fn main() -> clap_noun_verb::Result<()> {
     clap_noun_verb::run()
