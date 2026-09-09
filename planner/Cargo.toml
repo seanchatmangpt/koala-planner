@@ -9,7 +9,12 @@ default-run = "planner"
 
 [features]
 default = []
-agent-cli = ["dep:clap-noun-verb", "dep:clap-noun-verb-macros", "dep:linkme"]
+agent-cli = [
+  "dep:clap-noun-verb",
+  "dep:clap-noun-verb-macros",
+  "dep:linkme",
+  "dep:koala-serializer",
+]
 
 [[bin]]
 name = "planner"
@@ -29,3 +34,4 @@ bit-vec = "*"
 clap-noun-verb = { version = "=26.9.1", optional = true }
 clap-noun-verb-macros = { version = "=26.9.1", optional = true }
 linkme = { version = "0.3.37", optional = true }
+koala-serializer = { path = "../crates/koala-serializer", optional = true }
