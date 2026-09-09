@@ -4,13 +4,7 @@
 use clap_noun_verb::Result;
 use clap_noun_verb_macros::verb;
 
-/// Solve one grounded Koala planning problem through the typed Rust core.
-///
-/// # Arguments
-/// * `grounded_json` - JSON artifact produced by the current PANDA/Python frontend
-/// * `mode` - Solver mode [default: flexible]
-/// * `heuristic` - Heuristic [default: ff]
-/// * `tiebreaker` - AND* tiebreaker [default: none]
+/// Solve one grounded Koala FOND-HTN problem through the typed Rust core.
 #[verb("solve", "plan")]
 pub fn plan_solve(
     grounded_json: String,
