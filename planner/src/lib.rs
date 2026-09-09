@@ -1,7 +1,7 @@
 //! Reusable Rust API for Koala's FOND-HTN search engine.
 //!
 //! This library is intentionally a thin typed boundary over the existing search
-//! implementation.  It does not replace the legacy `solve.py` + PANDA pipeline;
+//! implementation. It does not replace the legacy `solve.py` + PANDA pipeline;
 //! that path remains the compatibility oracle while the Rust surface is proven.
 
 extern crate bit_vec;
@@ -15,7 +15,8 @@ mod task_network;
 
 use serde::{Deserialize, Serialize};
 
-use crate::domain_description::{read_json_domain, FONDProblem};
+use crate::domain_description::read_json_domain;
+pub use crate::domain_description::FONDProblem;
 use crate::search::fixed_method::heuristic_factory;
 use crate::search::htn_andstar::TiebreakerKind;
 use crate::search::{HeuristicType, SearchResult};
@@ -80,7 +81,7 @@ impl Default for SolveOptions {
 /// Stable, serializable consequence of one search invocation.
 ///
 /// `policy_text` is deliberately retained as a compatibility projection in
-/// this first boundary.  Later PRs may add richer typed policy projections,
+/// this first boundary. Later PRs may add richer typed policy projections,
 /// but downstream consumers no longer need to depend on stdout parsing for
 /// the common solve metadata.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -146,9 +147,12 @@ impl Tiebreaker {
 pub fn solve(problem: &FONDProblem, options: SolveOptions) -> SolveReport {
     match options.mode {
         SolveMode::Flexible => {
-            let (result, stats) = crate::search::AOStarSearch::run(problem, options.heuristic.internal());
+            let (result, stats) =
+                crate::search::AOStarSearch::run(problem, options.heuristic.internal());
             match result {
-                SearchResult::Success(policy) => SolveReport::from_policy(policy, stats.to_string()),
+                SearchResult::Success(policy) => {
+                    SolveReport::from_policy(policy, stats.to_string())
+                }
                 SearchResult::NoSolution => SolveReport::no_solution(stats.to_string()),
             }
         }
@@ -159,7 +163,9 @@ pub fn solve(problem: &FONDProblem, options: SolveOptions) -> SolveReport {
                 options.tiebreaker.internal(),
             );
             match result {
-                SearchResult::Success(policy) => SolveReport::from_policy(policy, stats.to_string()),
+                SearchResult::Success(policy) => {
+                    SolveReport::from_policy(policy, stats.to_string())
+                }
                 SearchResult::NoSolution => SolveReport::no_solution(stats.to_string()),
             }
         }
@@ -199,7 +205,9 @@ fn solve_fixed(problem: &FONDProblem, heuristic: Heuristic, long_distance: bool)
 
     match result {
         AStarResult::Strong(policy) => SolveReport::from_policy(policy, stats.to_string()),
-        AStarResult::Linear(_) | AStarResult::NoSolution => SolveReport::no_solution(stats.to_string()),
+        AStarResult::Linear(_) | AStarResult::NoSolution => {
+            SolveReport::no_solution(stats.to_string())
+        }
     }
 }
 
