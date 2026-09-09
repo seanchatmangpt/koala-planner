@@ -15,7 +15,7 @@ mod task_network;
 
 use serde::{Deserialize, Serialize};
 
-use crate::domain_description::read_json_domain;
+use crate::domain_description::{read_json_domain, read_json_domain_str};
 pub use crate::domain_description::FONDProblem;
 use crate::search::fixed_method::heuristic_factory;
 use crate::search::htn_andstar::TiebreakerKind;
@@ -30,13 +30,9 @@ use crate::search::{
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum SolveMode {
-    /// Existing AO* flexible FOND-HTN search.
     Flexible,
-    /// Existing HTN-AND* FOND search.
     AndstarFond,
-    /// Existing fixed-method strong-OD search.
     Fixed,
-    /// Existing fixed-method strong-LD search.
     FixedLd,
 }
 
@@ -79,11 +75,6 @@ impl Default for SolveOptions {
 }
 
 /// Stable, serializable consequence of one search invocation.
-///
-/// `policy_text` is deliberately retained as a compatibility projection in
-/// this first boundary. Later PRs may add richer typed policy projections,
-/// but downstream consumers no longer need to depend on stdout parsing for
-/// the common solve metadata.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SolveReport {
     pub solved: bool,
@@ -181,6 +172,18 @@ pub fn solve_json_path(path: &str, options: SolveOptions) -> SolveReport {
     solve(&problem, options)
 }
 
+/// Filesystem-free equivalent of `solve_json_path` for embedding/WASM hosts.
+///
+/// The input is the same grounded JSON contract emitted by the legacy
+/// PANDA/Python frontend. Raw HDDL parsing is explicitly outside this function.
+pub fn solve_grounded_json(
+    input: &str,
+    options: SolveOptions,
+) -> Result<SolveReport, String> {
+    let problem = read_json_domain_str(input).map_err(|error| error.to_string())?;
+    Ok(solve(&problem, options))
+}
+
 fn solve_fixed(problem: &FONDProblem, heuristic: Heuristic, long_distance: bool) -> SolveReport {
     let h_type = heuristic.internal();
     let heuristic = heuristic_factory::create_function_with_heuristic(h_type.as_classical_fn());
@@ -234,5 +237,10 @@ mod tests {
         assert!(encoded.contains("andstar-fond"));
         assert!(encoded.contains("lmcut"));
         assert!(encoded.contains("combined"));
+    }
+
+    #[test]
+    fn malformed_in_memory_input_is_a_typed_error_not_a_panic() {
+        assert!(solve_grounded_json("not-json", SolveOptions::default()).is_err());
     }
 }
