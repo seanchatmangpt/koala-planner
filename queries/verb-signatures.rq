@@ -1,0 +1,18 @@
+PREFIX kp: <https://seanchatmangpt.github.io/koala-planner/ontology#>
+
+SELECT ?noun_name ?verb_name ?verb_about ?handler_name ?return_type ?rust_parameters ?call_arguments
+WHERE {
+  ?noun a kp:Noun ;
+        kp:nounName ?noun_name ;
+        kp:hasVerb ?verb .
+
+  ?verb a kp:Verb ;
+        kp:verbName ?verb_name ;
+        kp:about ?verb_about ;
+        kp:handlerName ?handler_name ;
+        kp:returnType ?return_type ;
+        kp:rustParameters ?rust_parameters ;
+        kp:callArguments ?call_arguments ;
+        kp:selectOnly true .
+}
+ORDER BY ?noun_name ?verb_name

@@ -1,0 +1,17 @@
+PREFIX kp: <https://seanchatmangpt.github.io/koala-planner/ontology#>
+
+# ASK true is a violation. Every generated verb must have a complete interface
+# contract and must remain SELECT-only at the planner boundary.
+ASK {
+  ?verb a kp:Verb .
+  FILTER (
+    NOT EXISTS { ?verb kp:verbName ?verb_name } ||
+    NOT EXISTS { ?verb kp:about ?about } ||
+    NOT EXISTS { ?verb kp:handlerName ?handler_name } ||
+    NOT EXISTS { ?verb kp:returnType ?return_type } ||
+    NOT EXISTS { ?verb kp:rustParameters ?rust_parameters } ||
+    NOT EXISTS { ?verb kp:callArguments ?call_arguments } ||
+    NOT EXISTS { ?verb kp:selectOnly true } ||
+    NOT EXISTS { ?noun a kp:Noun ; kp:hasVerb ?verb ; kp:nounName ?noun_name }
+  )
+}
