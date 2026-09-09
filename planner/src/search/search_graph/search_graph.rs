@@ -81,14 +81,8 @@ impl SearchGraph {
     fn visited(&self, tn: &HTN, state: &HashSet<u32>) -> Option<u32> {
         for (id, node) in self.ids.iter() {
             let node = node.borrow();
-            if node.state.as_ref() == state {
-                if HTN::is_isomorphic(&node.tn, tn) {
-                    return Some(*id);
-                } else {
-                    return None;
-                }
-            } else {
-                return None;
+            if node.state.as_ref() == state && HTN::is_isomorphic(&node.tn, tn) {
+                return Some(*id);
             }
         }
         None
