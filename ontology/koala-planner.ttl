@@ -1,0 +1,36 @@
+@prefix kp: <https://seanchatmangpt.github.io/koala-planner/ontology#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+kp:Noun a rdfs:Class .
+kp:Verb a rdfs:Class .
+
+kp:nounName a rdf:Property .
+kp:verbName a rdf:Property .
+kp:about a rdf:Property .
+kp:handlerName a rdf:Property .
+kp:returnType a rdf:Property .
+kp:rustParameters a rdf:Property .
+kp:callArguments a rdf:Property .
+kp:selectOnly a rdf:Property .
+kp:hasVerb a rdf:Property .
+
+kp:Plan
+    a kp:Noun ;
+    kp:nounName "plan" ;
+    kp:hasVerb kp:PlanSolve .
+
+# The current public solve command is intentionally honest about its input:
+# it consumes the grounded JSON artifact produced by the legacy PANDA/Python
+# frontend. Raw HDDL becomes a later capability only after a Rust frontend has
+# differential evidence against that oracle.
+kp:PlanSolve
+    a kp:Verb ;
+    kp:verbName "solve" ;
+    kp:about "Solve one grounded Koala FOND-HTN problem through the typed Rust core." ;
+    kp:handlerName "plan_solve" ;
+    kp:returnType "planner::SolveReport" ;
+    kp:rustParameters "    grounded_json: String,\n    mode: Option<String>,\n    heuristic: Option<String>,\n    tiebreaker: Option<String>," ;
+    kp:callArguments "grounded_json, mode, heuristic, tiebreaker" ;
+    kp:selectOnly true .

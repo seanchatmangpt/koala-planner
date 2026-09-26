@@ -2,8 +2,23 @@
 name = "planner"
 version = "0.1.0"
 edition = "2021"
+autobins = false
+default-run = "planner"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+default = []
+agent-cli = ["dep:clap-noun-verb", "dep:clap-noun-verb-macros", "dep:linkme"]
+
+[[bin]]
+name = "planner"
+path = "src/main.rs"
+
+[[bin]]
+name = "koala"
+path = "src/bin/koala/main.rs"
+required-features = ["agent-cli"]
 
 [dependencies]
 serde = { version = "*", features = ["derive"] }
@@ -11,3 +26,6 @@ serde_json = "*"
 rand = "*"
 regex = "1.10.0"
 bit-vec = "*"
+clap-noun-verb = { version = "=26.9.1", optional = true }
+clap-noun-verb-macros = { version = "=26.9.1", optional = true }
+linkme = { version = "0.3.37", optional = true }
