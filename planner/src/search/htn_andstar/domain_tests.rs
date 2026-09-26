@@ -10,7 +10,6 @@ mod tests {
     use crate::domain_description::read_json_domain;
     use crate::search::{HeuristicType, SearchResult};
 
-
     fn check_fond(json_path: &str, heuristic: HeuristicType) {
         let problem = read_json_domain(json_path);
         let (result, _stats) = run(&problem, heuristic, TiebreakerKind::Combined);

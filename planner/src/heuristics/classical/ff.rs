@@ -1,5 +1,5 @@
-use std::collections::{HashSet};
 use super::*;
+use std::collections::HashSet;
 
 pub fn h_ff(domain: &ClassicalDomain, state: &HashSet<u32>, goal: &HashSet<u32>) -> f32 {
     let graphplan = GraphPlan::build_graph(domain, state, goal);
@@ -32,7 +32,9 @@ fn plan_length(domain: &ClassicalDomain, graphplan: GraphPlan, goal_state: &Hash
 
     for i in (1..=depth).rev() {
         let i = i as u32;
-        let Some(goals_at_layer) = g.get(&i) else { continue };
+        let Some(goals_at_layer) = g.get(&i) else {
+            continue;
+        };
         let layer_off = i as usize * n_facts;
         let prev_off = (i as usize - 1) * n_facts;
 
@@ -149,14 +151,14 @@ mod test {
             vec![HashSet::from([1, 2])],
             vec![HashSet::new()],
         );
-        let facts = Facts::new(vec![
-            "f0".to_owned(),
-            "f1".to_owned(),
-            "f2".to_owned(),
-        ]);
+        let facts = Facts::new(vec!["f0".to_owned(), "f1".to_owned(), "f2".to_owned()]);
         let domain = ClassicalDomain::new(facts, vec![p_joint]);
         // Both goals 1 and 2 are achieved by p_joint in one step: h_ff should be 1.
-        let h = h_ff(&domain, &HashSet::from([0u32]), &HashSet::from([1u32, 2u32]));
+        let h = h_ff(
+            &domain,
+            &HashSet::from([0u32]),
+            &HashSet::from([1u32, 2u32]),
+        );
         assert_eq!(h, 1.0);
     }
 }

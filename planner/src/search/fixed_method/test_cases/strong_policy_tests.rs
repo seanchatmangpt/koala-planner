@@ -2,7 +2,7 @@
 use super::super::astar::{a_star_search, AStarResult};
 use super::super::goal_checks::*;
 use super::super::*;
-use crate::domain_description::{Facts, FONDProblem};
+use crate::domain_description::{FONDProblem, Facts};
 use search_node::{get_successors_systematic, SearchNode};
 use std::collections::{BTreeSet, HashMap, HashSet};
 use std::rc::Rc;
@@ -39,7 +39,12 @@ fn strong_ld_deterministic_plan() {
             ),
         ],
         vec![
-            (minit.clone(), init.clone(), vec![a.clone(), t.clone()], vec![(0, 1)]),
+            (
+                minit.clone(),
+                init.clone(),
+                vec![a.clone(), t.clone()],
+                vec![(0, 1)],
+            ),
             (mt.clone(), t.clone(), vec![b.clone()], vec![]),
         ],
         vec![init.clone(), t.clone()],

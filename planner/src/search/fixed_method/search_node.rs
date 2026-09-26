@@ -74,9 +74,10 @@ impl SearchNode {
     }
 
     pub fn to_string(&self, problem: &FONDProblem) -> String {
-        format!("{} {}",
+        format!(
+            "{} {}",
             SearchNode::to_string_structure(&self.state, &self.tn, problem),
-            if self.goal_tested {"GOAL_TESTED"} else {""}
+            if self.goal_tested { "GOAL_TESTED" } else { "" }
         )
     }
 

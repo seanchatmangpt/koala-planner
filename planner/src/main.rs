@@ -14,9 +14,7 @@ use crate::search::htn_andstar::TiebreakerKind;
 use crate::search::{HeuristicType, SearchResult};
 use domain_description::{read_json_domain, FONDProblem};
 use search::{
-    astar::AStarResult,
-    goal_checks::is_goal_strong_od,
-    search_node::get_successors_systematic,
+    astar::AStarResult, goal_checks::is_goal_strong_od, search_node::get_successors_systematic,
 };
 
 fn main() {
@@ -47,9 +45,9 @@ fn main() {
     let h_type: HeuristicType = args
         .iter()
         .find_map(|a| match a.as_str() {
-            "--add"   => Some(HeuristicType::HAdd),
-            "--max"   => Some(HeuristicType::HMax),
-            "--ff"    => Some(HeuristicType::HFF),
+            "--add" => Some(HeuristicType::HAdd),
+            "--max" => Some(HeuristicType::HMax),
+            "--ff" => Some(HeuristicType::HFF),
             "--lmcut" => Some(HeuristicType::HLMCut),
             _ => None,
         })
@@ -59,7 +57,10 @@ fn main() {
         Some(flag) => match flag.as_str() {
             "--fixed" => {
                 println!("Running fixed method solver");
-                fixed_method(&problem, heuristic_factory::create_function_with_heuristic(h_type.as_classical_fn()))
+                fixed_method(
+                    &problem,
+                    heuristic_factory::create_function_with_heuristic(h_type.as_classical_fn()),
+                )
             }
             "--flexible" => {
                 println!("Running AO* flexible solver");
@@ -72,7 +73,10 @@ fn main() {
             }
             "--fixed-ld" => {
                 println!("Running fixed strong-LD solver");
-                fixed_ld(&problem, heuristic_factory::create_function_with_heuristic(h_type.as_classical_fn()))
+                fixed_ld(
+                    &problem,
+                    heuristic_factory::create_function_with_heuristic(h_type.as_classical_fn()),
+                )
             }
             _ => panic!("Did not recognise flag {}", flag),
         },

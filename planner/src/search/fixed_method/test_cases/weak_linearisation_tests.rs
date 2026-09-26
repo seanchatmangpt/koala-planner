@@ -2,7 +2,7 @@
 use super::super::astar::{a_star_search, AStarResult};
 use super::super::goal_checks::*;
 use super::super::*;
-use crate::domain_description::{Facts, FONDProblem};
+use crate::domain_description::{FONDProblem, Facts};
 use search_node::get_successors_systematic;
 use std::collections::{BTreeSet, HashMap, HashSet};
 
@@ -158,7 +158,12 @@ pub fn weak_ld_problem_3() {
         vec![f1.clone()],
         vec![
             (a.clone(), vec![], vec![(vec![], vec![])], vec![1.0]),
-            (b.clone(), vec![f1.clone()], vec![(vec![], vec![])], vec![1.0]),
+            (
+                b.clone(),
+                vec![f1.clone()],
+                vec![(vec![], vec![])],
+                vec![1.0],
+            ),
         ],
         vec![
             (m1.clone(), init.clone(), vec![b.clone()], vec![]),

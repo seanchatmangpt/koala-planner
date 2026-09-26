@@ -27,7 +27,12 @@ impl ClassicalDomain {
                 }
             }
         }
-        ClassicalDomain { facts, actions, fact_to_actions, precond_counts }
+        ClassicalDomain {
+            facts,
+            actions,
+            fact_to_actions,
+            precond_counts,
+        }
     }
 
     pub fn delete_relax(&self) -> ClassicalDomain {

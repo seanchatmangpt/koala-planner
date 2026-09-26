@@ -1,8 +1,5 @@
 use super::*;
-use std::{
-    collections::HashSet,
-    rc::Rc,
-};
+use std::{collections::HashSet, rc::Rc};
 
 pub fn progress(tn: Rc<HTN>, state: Rc<HashSet<u32>>) -> Vec<NodeExpansion> {
     if tn.is_goal() {
@@ -11,7 +8,7 @@ pub fn progress(tn: Rc<HTN>, state: Rc<HashSet<u32>>) -> Vec<NodeExpansion> {
     let unconstrained = tn.get_unconstrained_tasks();
     let (abstract_tasks, primitive_tasks) = tn.separate_tasks(&unconstrained);
     let mut expansions = vec![];
-    
+
     // Following Alg. 3 of Höller et al. (2020): while an unconstrained abstract
     // task remains, decompose one of them and progress no action. Only once no
     // unconstrained abstract task is left do we progress the primitive tasks.
@@ -31,7 +28,7 @@ pub fn progress(tn: Rc<HTN>, state: Rc<HashSet<u32>>) -> Vec<NodeExpansion> {
                             method.name.clone(),
                         ),
                         tn: new_tn,
-                        states: vec![state.clone()]
+                        states: vec![state.clone()],
                     });
                 }
             }
@@ -50,12 +47,9 @@ pub fn progress(tn: Rc<HTN>, state: Rc<HashSet<u32>>) -> Vec<NodeExpansion> {
                             .map(Rc::new)
                             .collect();
                         expansions.push(NodeExpansion {
-                            connection_label: ConnectionLabel::Execution(
-                                a.name.clone(),
-                                a.cost,
-                            ),
+                            connection_label: ConnectionLabel::Execution(a.name.clone(), a.cost),
                             tn: new_tn,
-                            states: new_states
+                            states: new_states,
                         });
                     }
                 }
@@ -69,7 +63,7 @@ pub fn progress(tn: Rc<HTN>, state: Rc<HashSet<u32>>) -> Vec<NodeExpansion> {
 pub struct NodeExpansion {
     pub connection_label: ConnectionLabel,
     pub tn: Rc<HTN>,
-    pub states: Vec<Rc<HashSet<u32>>>
+    pub states: Vec<Rc<HashSet<u32>>>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -98,7 +92,10 @@ impl ConnectionLabel {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{domain_description::DomainTasks, task_network::{Method, PrimitiveAction}};
+    use crate::{
+        domain_description::DomainTasks,
+        task_network::{Method, PrimitiveAction},
+    };
     use std::collections::{BTreeSet, HashMap};
 
     #[test]
@@ -172,10 +169,7 @@ mod tests {
             BTreeSet::from([1, 4]),
             vec![(1, 4)],
             domain.clone(),
-            HashMap::from([
-                (1, domain.get_id("p1")),
-                (4, domain.get_id("p4")),
-            ]),
+            HashMap::from([(1, domain.get_id("p1")), (4, domain.get_id("p4"))]),
         );
         let expansion2 = progress(Rc::new(tn2), Rc::clone(&state));
         assert_eq!(expansion2.len(), 1); // two states, resulting from p1 and p2 in one AND node

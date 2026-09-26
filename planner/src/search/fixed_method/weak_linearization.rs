@@ -1,11 +1,7 @@
 #![allow(dead_code)]
 use super::search_node::SearchNode;
 use crate::{domain_description::FONDProblem, task_network::HTN};
-use std::{
-    cell::RefCell,
-    collections::HashSet,
-    rc::Rc,
-};
+use std::{cell::RefCell, collections::HashSet, rc::Rc};
 
 pub struct WeakLinearization {
     linearization: Vec<(HashSet<u32>, HTN)>,

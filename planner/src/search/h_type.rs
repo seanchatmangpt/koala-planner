@@ -11,9 +11,9 @@ pub enum HeuristicType {
 impl HeuristicType {
     pub fn as_classical_fn(&self) -> ClassicalHeuristic {
         match self {
-            HeuristicType::HFF    => h_ff,
-            HeuristicType::HAdd   => h_add,
-            HeuristicType::HMax   => h_max,
+            HeuristicType::HFF => h_ff,
+            HeuristicType::HAdd => h_add,
+            HeuristicType::HMax => h_max,
             HeuristicType::HLMCut => h_lmcut,
         }
     }

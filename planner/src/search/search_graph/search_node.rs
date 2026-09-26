@@ -89,9 +89,9 @@ impl SearchGraphNode {
         let relaxed_state = encoder.compute_relaxed_state(&task_ids, state);
         let goal_state = encoder.compute_goal_state(&task_ids);
         let mut val = match h_type {
-            HeuristicType::HFF    => h_ff   (&encoder.domain, &relaxed_state, &goal_state),
-            HeuristicType::HAdd   => h_add  (&encoder.domain, &relaxed_state, &goal_state),
-            HeuristicType::HMax   => h_max  (&encoder.domain, &relaxed_state, &goal_state),
+            HeuristicType::HFF => h_ff(&encoder.domain, &relaxed_state, &goal_state),
+            HeuristicType::HAdd => h_add(&encoder.domain, &relaxed_state, &goal_state),
+            HeuristicType::HMax => h_max(&encoder.domain, &relaxed_state, &goal_state),
             HeuristicType::HLMCut => h_lmcut(&encoder.domain, &relaxed_state, &goal_state),
         };
 
@@ -123,8 +123,13 @@ impl SearchGraphNode {
             .collect();
         let relaxed_state = encoder.compute_relaxed_state(&task_ids, state);
         let goal_state = encoder.compute_goal_state(&task_ids);
-        let (mut val, landmarks) =
-            h_lmcut_incremental(&encoder.domain, &relaxed_state, &goal_state, parent_cuts, exclude_action);
+        let (mut val, landmarks) = h_lmcut_incremental(
+            &encoder.domain,
+            &relaxed_state,
+            &goal_state,
+            parent_cuts,
+            exclude_action,
+        );
         for (_, count) in occurances {
             if count > 1 {
                 val += (count - 1) as f32;
@@ -152,9 +157,9 @@ impl SearchGraphNode {
         let goal_state = encoder.compute_goal_state(&task_ids);
         let (mut val, landmarks) = match h_type {
             HeuristicType::HLMCut => h_lmcut_full(&encoder.domain, &relaxed_state, &goal_state),
-            HeuristicType::HFF    => (h_ff   (&encoder.domain, &relaxed_state, &goal_state), vec![]),
-            HeuristicType::HAdd   => (h_add  (&encoder.domain, &relaxed_state, &goal_state), vec![]),
-            HeuristicType::HMax   => (h_max  (&encoder.domain, &relaxed_state, &goal_state), vec![]),
+            HeuristicType::HFF => (h_ff(&encoder.domain, &relaxed_state, &goal_state), vec![]),
+            HeuristicType::HAdd => (h_add(&encoder.domain, &relaxed_state, &goal_state), vec![]),
+            HeuristicType::HMax => (h_max(&encoder.domain, &relaxed_state, &goal_state), vec![]),
         };
         for (_, count) in occurances {
             if count > 1 {
@@ -163,5 +168,4 @@ impl SearchGraphNode {
         }
         (val, landmarks)
     }
-
 }

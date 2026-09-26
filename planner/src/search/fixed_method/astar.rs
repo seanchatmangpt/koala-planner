@@ -1,9 +1,7 @@
 #![allow(dead_code, unused_must_use)]
 use super::*;
 use crate::{
-    domain_description::FONDProblem,
-    relaxation::RelaxedComposition,
-    search::StrongPolicy,
+    domain_description::FONDProblem, relaxation::RelaxedComposition, search::StrongPolicy,
     task_network::HTN,
 };
 use priority_queue::PriorityQueue;
@@ -45,7 +43,7 @@ impl std::fmt::Display for AStarStatistics {
                 CustomStatistic::List(vec) => writeln!(f, "{}: {:?}", key, vec),
                 CustomStatistic::FloatValue(val) => writeln!(f, "{}: {}", key, val),
             };
-        };
+        }
         writeln!(f, "# of search nodes: {}", self.space.total_nodes);
         writeln!(f, "# of explored nodes: {}", self.space.explored_nodes)
     }
@@ -69,7 +67,9 @@ pub fn calculate_ipc_score(statistics: &mut CustomStatistics, start_time: Instan
     );
     let ipc_score = if duration > 1.0 {
         1.0 - (duration.log(10.0) / (1800.0 as f64).log(10.0))
-    } else {1.0};
+    } else {
+        1.0
+    };
     statistics.insert(
         String::from("IPC Score"),
         CustomStatistic::FloatValue(ipc_score),
@@ -173,7 +173,7 @@ pub fn a_star_search(
             } // succ_ref lifetime
 
             // Insert back into open with new f value
-            if edge.next_node.borrow().status == AStarStatus::Open  {
+            if edge.next_node.borrow().status == AStarStatus::Open {
                 open.insert(edge.next_node.clone());
             }
         }

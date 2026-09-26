@@ -1,4 +1,4 @@
-use crate::domain_description::{DomainTasks, Facts, FONDProblem};
+use crate::domain_description::{DomainTasks, FONDProblem, Facts};
 use crate::search::acyclic_plan::acyclic_space::AOStarSearch;
 use crate::task_network::{CompoundTask, Method, PrimitiveAction, Task, HTN};
 use std::collections::{BTreeSet, HashMap, HashSet};

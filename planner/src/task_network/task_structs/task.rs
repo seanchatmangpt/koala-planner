@@ -5,12 +5,12 @@ use std::hash::{Hash, Hasher};
 use super::{CompoundTask, PrimitiveAction};
 
 #[derive(Debug, Clone)]
-pub enum Task{
+pub enum Task {
     Primitive(PrimitiveAction),
     Compound(CompoundTask),
 }
 
-impl  PartialEq for Task{
+impl PartialEq for Task {
     fn eq(&self, other: &Self) -> bool {
         match self {
             Self::Primitive(x) => match other {
@@ -44,24 +44,24 @@ impl Task {
     pub fn get_name(&self) -> String {
         match self {
             Task::Compound(CompoundTask { name, .. }) => name.clone(),
-            Task::Primitive(PrimitiveAction { name, .. }) => name.clone()
+            Task::Primitive(PrimitiveAction { name, .. }) => name.clone(),
         }
     }
 
     pub fn is_primitive(&self) -> bool {
         match self {
             Task::Primitive(_) => true,
-            _ => false
+            _ => false,
         }
     }
 }
 
-impl  fmt::Display for Task {
+impl fmt::Display for Task {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
         match self {
             Task::Compound(x) => {
                 writeln!(f, "COMPOUND_{}", x.name)
-            },
+            }
             Task::Primitive(x) => {
                 writeln!(f, "PRIMITIVE_{}", x.name)
             }
@@ -86,7 +86,7 @@ mod tests {
             1,
             HashSet::new(),
             empty_effects.clone(),
-            empty_effects.clone()
+            empty_effects.clone(),
         ));
         assert_eq!(primitive.get_name(), "task2".to_string());
     }

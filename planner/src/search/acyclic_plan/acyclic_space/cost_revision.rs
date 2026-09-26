@@ -6,9 +6,10 @@ impl SearchGraph {
     pub fn backward_cost_revision(&mut self, id: u32) {
         let mut working_set = BTreeSet::from([id]);
         while !working_set.is_empty() {
-            let mut depths: Vec<(u32, u16)> = working_set.iter().map(|x| {
-                (*x, self.ids.get(x).unwrap().borrow().depth)
-            }).collect();
+            let mut depths: Vec<(u32, u16)> = working_set
+                .iter()
+                .map(|x| (*x, self.ids.get(x).unwrap().borrow().depth))
+                .collect();
             depths.sort_by(|(_, depth1), (_, depth2)| depth2.cmp(depth1));
             let (node_id, _) = depths[0];
             working_set.remove(&node_id);
@@ -65,7 +66,8 @@ impl SearchGraph {
                         node.mark(arg_min);
                         node.cost = min_cost;
                         // Set success probability from best arc
-                        let best_arc = &node.connections.as_ref().unwrap().children[arg_min as usize];
+                        let best_arc =
+                            &node.connections.as_ref().unwrap().children[arg_min as usize];
                         node.success_probability = self.arc_success_probability(best_arc);
                         return node.parents.clone();
                     }
@@ -75,7 +77,8 @@ impl SearchGraph {
                             self.compute_min_cost(node.connections.as_ref().unwrap());
                         node.mark(arg_min);
                         // Update success probability
-                        let best_arc = &node.connections.as_ref().unwrap().children[arg_min as usize];
+                        let best_arc =
+                            &node.connections.as_ref().unwrap().children[arg_min as usize];
                         let new_prob = self.arc_success_probability(best_arc);
                         let prob_changed = (node.success_probability - new_prob).abs() > 1e-9;
                         node.success_probability = new_prob;
@@ -98,8 +101,8 @@ impl SearchGraph {
             match self.arc_status(arc) {
                 NodeStatus::Solved => {
                     return NodeStatus::Solved;
-                },
-                NodeStatus::Failed => {},
+                }
+                NodeStatus::Failed => {}
                 NodeStatus::OnGoing => {
                     all_failed = false;
                 }
@@ -119,7 +122,7 @@ impl SearchGraph {
             match node.status {
                 NodeStatus::Failed => {
                     return NodeStatus::Failed;
-                },
+                }
                 NodeStatus::OnGoing => result = NodeStatus::OnGoing,
                 NodeStatus::Solved => {}
             }
@@ -136,8 +139,8 @@ impl SearchGraph {
                 let child = self.ids.get(child).unwrap().borrow();
                 branch_cost += child.cost;
                 match child.status {
-                    NodeStatus::Solved => {},
-                    _ => is_solved = false
+                    NodeStatus::Solved => {}
+                    _ => is_solved = false,
                 }
             }
             if is_solved {

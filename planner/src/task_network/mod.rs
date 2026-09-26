@@ -2,8 +2,7 @@ mod applicability;
 mod network;
 mod task_structs;
 
-
-pub use network::HTN;
-pub use task_structs::{CompoundTask, Task, Method, PrimitiveAction};
+use crate::graph_lib::{vf2_isomorphism, Graph};
 pub use applicability::Applicability;
-use crate::graph_lib::{Graph, vf2_isomorphism};
+pub use network::HTN;
+pub use task_structs::{CompoundTask, Method, PrimitiveAction, Task};

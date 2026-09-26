@@ -73,7 +73,10 @@ impl<'a> GraphPlan<'a> {
                     let action_layer = fact_layer + 1;
                     action_placed[action_idx] = action_layer;
                     action_layer_vec[action_idx] = action_layer;
-                    layer_to_actions.entry(action_layer).or_default().push(action_idx);
+                    layer_to_actions
+                        .entry(action_layer)
+                        .or_default()
+                        .push(action_idx);
                     let new_fact_layer = action_layer + 1;
                     let action = &domain.actions[action_idx];
                     if action.add_effects.is_empty() {
@@ -86,7 +89,10 @@ impl<'a> GraphPlan<'a> {
                         }
                         if ei < n_facts && fact_placed[ei] == u32::MAX {
                             fact_placed[ei] = new_fact_layer;
-                            layer_to_facts.entry(new_fact_layer).or_default().push(effect);
+                            layer_to_facts
+                                .entry(new_fact_layer)
+                                .or_default()
+                                .push(effect);
                             queue.push_back((effect, new_fact_layer));
                             if goal.contains(&effect) {
                                 remaining_goals -= 1;
@@ -101,7 +107,12 @@ impl<'a> GraphPlan<'a> {
             return None;
         }
 
-        let depth = fact_placed.iter().filter(|&&l| l != u32::MAX).cloned().max().unwrap_or(0);
+        let depth = fact_placed
+            .iter()
+            .filter(|&&l| l != u32::MAX)
+            .cloned()
+            .max()
+            .unwrap_or(0);
 
         Some(GraphPlan {
             fact_placed,

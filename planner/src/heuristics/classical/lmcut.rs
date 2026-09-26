@@ -196,8 +196,16 @@ fn h_lmcut_core(
         let hmax = compute_hmax_event_driven(domain, state, &costs, n_facts);
 
         let goal_hmax = goal.iter().fold(0u32, |acc, &g| {
-            let gv = if (g as usize) < n_facts { hmax[g as usize] } else { u32::MAX };
-            if acc == u32::MAX || gv == u32::MAX { u32::MAX } else { acc.max(gv) }
+            let gv = if (g as usize) < n_facts {
+                hmax[g as usize]
+            } else {
+                u32::MAX
+            };
+            if acc == u32::MAX || gv == u32::MAX {
+                u32::MAX
+            } else {
+                acc.max(gv)
+            }
         });
         if goal_hmax == u32::MAX {
             return (f32::INFINITY, all_cuts);
@@ -222,8 +230,16 @@ fn h_lmcut_core(
             for &idx in &achievers[fi] {
                 let action = &domain.actions[idx];
                 let act_hmax = action.pre_cond.iter().fold(0u32, |acc, &p| {
-                    let pv = if (p as usize) < n_facts { hmax[p as usize] } else { u32::MAX };
-                    if acc == u32::MAX || pv == u32::MAX { u32::MAX } else { acc.max(pv) }
+                    let pv = if (p as usize) < n_facts {
+                        hmax[p as usize]
+                    } else {
+                        u32::MAX
+                    };
+                    if acc == u32::MAX || pv == u32::MAX {
+                        u32::MAX
+                    } else {
+                        acc.max(pv)
+                    }
                 });
                 if act_hmax == u32::MAX {
                     continue;
@@ -251,8 +267,16 @@ fn h_lmcut_core(
                 continue;
             }
             let act_hmax = action.pre_cond.iter().fold(0u32, |acc, &p| {
-                let pv = if (p as usize) < n_facts { hmax[p as usize] } else { u32::MAX };
-                if acc == u32::MAX || pv == u32::MAX { u32::MAX } else { acc.max(pv) }
+                let pv = if (p as usize) < n_facts {
+                    hmax[p as usize]
+                } else {
+                    u32::MAX
+                };
+                if acc == u32::MAX || pv == u32::MAX {
+                    u32::MAX
+                } else {
+                    acc.max(pv)
+                }
             });
             if act_hmax != 0 {
                 continue;
@@ -286,8 +310,12 @@ mod tests {
     use crate::task_network::PrimitiveAction;
 
     fn chain_domain() -> ClassicalDomain {
-        let facts =
-            Facts::new(["0", "1", "2", "3", "4"].iter().map(|s| s.to_string()).collect());
+        let facts = Facts::new(
+            ["0", "1", "2", "3", "4"]
+                .iter()
+                .map(|s| s.to_string())
+                .collect(),
+        );
         let mk = |pre: HashSet<u32>, add: HashSet<u32>| -> PrimitiveAction {
             PrimitiveAction::new("".into(), 1, pre, vec![add], vec![HashSet::new()])
         };
@@ -305,25 +333,37 @@ mod tests {
     #[test]
     fn goal_already_satisfied() {
         let d = chain_domain();
-        assert_eq!(h_lmcut(&d, &HashSet::from([4u32]), &HashSet::from([4u32])), 0.0);
+        assert_eq!(
+            h_lmcut(&d, &HashSet::from([4u32]), &HashSet::from([4u32])),
+            0.0
+        );
     }
 
     #[test]
     fn unreachable_returns_infinity() {
         let d = chain_domain();
-        assert_eq!(h_lmcut(&d, &HashSet::from([0u32]), &HashSet::from([99u32])), f32::INFINITY);
+        assert_eq!(
+            h_lmcut(&d, &HashSet::from([0u32]), &HashSet::from([99u32])),
+            f32::INFINITY
+        );
     }
 
     #[test]
     fn single_step() {
         let d = chain_domain();
-        assert_eq!(h_lmcut(&d, &HashSet::from([0u32]), &HashSet::from([1u32])), 1.0);
+        assert_eq!(
+            h_lmcut(&d, &HashSet::from([0u32]), &HashSet::from([1u32])),
+            1.0
+        );
     }
 
     #[test]
     fn four_action_chain_gives_three() {
         let d = chain_domain();
-        assert_eq!(h_lmcut(&d, &HashSet::from([0u32]), &HashSet::from([4u32])), 3.0);
+        assert_eq!(
+            h_lmcut(&d, &HashSet::from([0u32]), &HashSet::from([4u32])),
+            3.0
+        );
     }
 
     #[test]

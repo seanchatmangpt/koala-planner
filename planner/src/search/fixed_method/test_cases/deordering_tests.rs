@@ -2,7 +2,7 @@
 use super::super::astar::{a_star_search, AStarResult};
 use super::super::goal_checks::*;
 use super::super::*;
-use crate::domain_description::{Facts, FONDProblem};
+use crate::domain_description::{FONDProblem, Facts};
 use search_node::get_successors_systematic;
 use std::collections::{BTreeSet, HashMap, HashSet};
 
@@ -169,7 +169,7 @@ fn test_deordering3() {
                     (vec![f2.clone()], vec![]),
                     (vec![f3.clone()], vec![]),
                 ],
-                vec![1.0/3.0, 1.0/3.0, 1.0/3.0],
+                vec![1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0],
             ),
             (
                 b.clone(),

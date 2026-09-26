@@ -81,7 +81,11 @@ pub fn h_add(domain: &ClassicalDomain, state: &HashSet<u32>, goal: &HashSet<u32>
     goal.iter()
         .map(|&f| {
             let fi = f as usize;
-            if fi < n_facts { fact_cost[fi] } else { 0 }
+            if fi < n_facts {
+                fact_cost[fi]
+            } else {
+                0
+            }
         })
         .sum::<u32>() as f32
 }

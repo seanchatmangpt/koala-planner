@@ -199,7 +199,7 @@ mod tests {
     use super::*;
     use crate::{
         domain_description::{DomainTasks, FONDProblem, Facts},
-        task_network::{CompoundTask, HTN, Method, PrimitiveAction, Task},
+        task_network::{CompoundTask, Method, PrimitiveAction, Task, HTN},
     };
     #[test]
     pub fn tdg_correctnes_test() {
@@ -453,7 +453,8 @@ mod tests {
         problem.collapse_tn();
         let tn = problem.init_tn;
         let tdg = TDG::new(&tn);
-        if let Task::Compound(CompoundTask { name: _, methods }) = &*tn.get_all_tasks()[0].borrow() {
+        if let Task::Compound(CompoundTask { name: _, methods }) = &*tn.get_all_tasks()[0].borrow()
+        {
             let new_tn = tn.decompose(*tn.get_nodes().iter().next().unwrap(), &methods[0]);
             let p1_id = new_tn
                 .get_all_tasks_with_ids()

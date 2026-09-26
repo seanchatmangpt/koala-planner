@@ -4,7 +4,6 @@ use crate::domain_description::ClassicalDomain;
 use crate::relaxation::RelaxedComposition;
 use crate::task_network::HTN;
 
-
 pub type ClassicalHeuristic = fn(&ClassicalDomain, &HashSet<u32>, &HashSet<u32>) -> f32;
 
 pub type HeuristicFn =

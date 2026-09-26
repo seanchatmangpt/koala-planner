@@ -1,9 +1,9 @@
 use std::collections::HashSet;
 
 use super::TDG;
+use crate::domain_description::FONDProblem;
 use crate::domain_description::{ClassicalDomain, Facts};
 use crate::task_network::{PrimitiveAction, Task};
-use crate::domain_description::FONDProblem;
 use regex::Regex;
 
 #[derive(Debug)]
@@ -53,7 +53,11 @@ impl RelaxedComposition {
                             fact_ids.push(classic_domain.facts.get_id(&name));
                         }
                     } else {
-                        fact_ids.push(classic_domain.facts.get_id(&(prim.name.clone() + "_reachable")));
+                        fact_ids.push(
+                            classic_domain
+                                .facts
+                                .get_id(&(prim.name.clone() + "_reachable")),
+                        );
                     }
                 }
             }
@@ -142,16 +146,18 @@ impl RelaxedComposition {
     }
 
     pub fn compute_goal_state(&self, task_ids: &Vec<u32>) -> HashSet<u32> {
-        task_ids.iter().map(|&id| self.task_goal_facts[id as usize]).collect()
+        task_ids
+            .iter()
+            .map(|&id| self.task_goal_facts[id as usize])
+            .collect()
     }
-
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::task_network::{CompoundTask, HTN, Method};
     use super::*;
     use crate::domain_description::DomainTasks;
+    use crate::task_network::{CompoundTask, Method, HTN};
     use std::cell::RefCell;
     use std::collections::{BTreeSet, HashMap};
     use std::rc::Rc;

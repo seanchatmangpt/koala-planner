@@ -98,9 +98,19 @@ fn compute_reach(
         if has_decomposition {
             // ── UC ≠ ∅ — open OR node; policy assigns a connector (method or primitive) ──
             let (h, landmarks) = lookup_or_compute_h(
-                &node_key, tn.as_ref(), state.as_ref(), relaxed, bijection, h_type, h_cache,
+                &node_key,
+                tn.as_ref(),
+                state.as_ref(),
+                relaxed,
+                bijection,
+                h_type,
+                h_cache,
             );
-            let c = if h == f32::INFINITY { f64::INFINITY } else { h as f64 };
+            let c = if h == f32::INFINITY {
+                f64::INFINITY
+            } else {
+                h as f64
+            };
             let p = if h == f32::INFINITY { 0.0 } else { 1.0 };
             let (prob_upper, cost_lower) = (p, c);
             reach[node_idx] = Some(ReachNode {
@@ -186,8 +196,7 @@ fn lookup_or_compute_h(
     if let Some(cached) = h_cache.get(key) {
         return cached.clone();
     }
-    let computed =
-        SearchGraphNode::h_val_with_landmarks(tn, state, relaxed, bijection, h_type);
+    let computed = SearchGraphNode::h_val_with_landmarks(tn, state, relaxed, bijection, h_type);
     h_cache.insert(key.clone(), computed.clone());
     computed
 }
@@ -216,7 +225,12 @@ fn compute_reach_incremental(
     h_type: &HeuristicType,
     method_action_idx: Option<usize>,
     h_cache: &mut HCache,
-) -> (ReachNode, Vec<ReachNode>, HashMap<MemoKey, usize>, Vec<usize>) {
+) -> (
+    ReachNode,
+    Vec<ReachNode>,
+    HashMap<MemoKey, usize>,
+    Vec<usize>,
+) {
     // No clone of the parent reach — only the modified node and the newly
     // discovered tail (extension) are materialised. Downstream consumers read
     // the virtual reach via ReachView::Incremental { parent, modified, extension }.
@@ -319,13 +333,21 @@ fn compute_reach_incremental(
                     )
                 } else {
                     SearchGraphNode::h_val_with_landmarks(
-                        tn.as_ref(), state.as_ref(), relaxed, bijection, h_type,
+                        tn.as_ref(),
+                        state.as_ref(),
+                        relaxed,
+                        bijection,
+                        h_type,
                     )
                 };
                 h_cache.insert(node_key.clone(), computed.clone());
                 computed
             };
-            let c = if h == f32::INFINITY { f64::INFINITY } else { h as f64 };
+            let c = if h == f32::INFINITY {
+                f64::INFINITY
+            } else {
+                h as f64
+            };
             let p = if h == f32::INFINITY { 0.0 } else { 1.0 };
             let (prob_upper, cost_lower) = (p, c);
             extension[ext_idx] = Some(ReachNode {
@@ -568,20 +590,19 @@ fn run_internal(
                 None
             };
 
-            let (modified_node, extension, _new_index_map, new_out_c) =
-                compute_reach_incremental(
-                    &reach_rc,
-                    &index_map,
-                    &pi.out_c,
-                    node_idx,
-                    expansion,
-                    node_state.clone(),
-                    &relaxed,
-                    &bijection,
-                    &h_type,
-                    method_action_idx,
-                    &mut h_cache,
-                );
+            let (modified_node, extension, _new_index_map, new_out_c) = compute_reach_incremental(
+                &reach_rc,
+                &index_map,
+                &pi.out_c,
+                node_idx,
+                expansion,
+                node_state.clone(),
+                &relaxed,
+                &bijection,
+                &h_type,
+                method_action_idx,
+                &mut h_cache,
+            );
             // View the parent reach + modified node + extension as a single
             // virtual reach for the f-value / signature / properness checks,
             // without ever materialising a full Vec<ReachNode>.
@@ -911,12 +932,14 @@ mod tests {
         // delta = max(5+0, 2+1) = 5
         // min_out_c_h = 2.0, min_h_term = 1, lb = max(5, 5+1) = 6  → f = -6.0
         use super::{NodeKind, ReachNode};
-        let dummy_tn = || Rc::new(HTN::new(
-            std::collections::BTreeSet::new(),
-            vec![],
-            Rc::new(DomainTasks::new(vec![])),
-            HashMap::new(),
-        ));
+        let dummy_tn = || {
+            Rc::new(HTN::new(
+                std::collections::BTreeSet::new(),
+                vec![],
+                Rc::new(DomainTasks::new(vec![])),
+                HashMap::new(),
+            ))
+        };
         let reach = vec![
             ReachNode {
                 tn: dummy_tn(),
