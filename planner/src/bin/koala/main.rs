@@ -4,6 +4,7 @@
 //! Domain behavior remains in `handlers`; generated wrappers stay thin.
 
 mod handlers;
+mod oracle;
 mod plan;
 
 fn main() -> clap_noun_verb::Result<()> {

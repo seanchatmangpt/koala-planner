@@ -34,3 +34,21 @@ kp:PlanSolve
     kp:rustParameters "    grounded_json: String,\n    mode: Option<String>,\n    heuristic: Option<String>,\n    tiebreaker: Option<String>," ;
     kp:callArguments "grounded_json, mode, heuristic, tiebreaker" ;
     kp:selectOnly true .
+
+kp:Oracle
+    a kp:Noun ;
+    kp:nounName "oracle" ;
+    kp:hasVerb kp:OracleCompare .
+
+# This comparison is the Chesterton fence for replacing legacy serialization.
+# It compares two grounded JSON artifacts semantically; it does not execute or
+# mutate either pipeline.
+kp:OracleCompare
+    a kp:Verb ;
+    kp:verbName "compare" ;
+    kp:about "Compare legacy and candidate grounded JSON artifacts for semantic equality." ;
+    kp:handlerName "oracle_compare" ;
+    kp:returnType "crate::handlers::OracleReport" ;
+    kp:rustParameters "    legacy_json: String,\n    candidate_json: String," ;
+    kp:callArguments "legacy_json, candidate_json" ;
+    kp:selectOnly true .
