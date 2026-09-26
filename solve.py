@@ -132,7 +132,6 @@ if __name__ == "__main__":
     # Parse named flags from remaining arguments
     mode_flag = []
     heuristic_flag = []
-    threshold_flag = []
     tiebreak_flag = []
     mem_limit_gb = None
     output_path = None
@@ -141,13 +140,10 @@ if __name__ == "__main__":
     i = 0
     while i < len(args):
         arg = args[i]
-        if arg in ("--fixed", "--flexible", "--andstar", "--andstar-fond", "--fixed-ld"):
+        if arg in ("--fixed", "--flexible", "--andstar-fond", "--fixed-ld"):
             mode_flag = [arg]
-        elif arg in ("--ff", "--add", "--max", "--prob", "--lmcut"):
+        elif arg in ("--ff", "--add", "--max", "--lmcut"):
             heuristic_flag = [arg]
-        elif arg == "--threshold" and i + 1 < len(args):
-            threshold_flag = ["--threshold", args[i + 1]]
-            i += 1
         elif arg == "--tiebreak" and i + 1 < len(args):
             tiebreak_flag = ["--tiebreak", args[i + 1]]
             i += 1
@@ -166,5 +162,5 @@ if __name__ == "__main__":
         print("No heuristic specified, defaulting to --ff")
         heuristic_flag = ["--ff"]
 
-    optional_flags = mode_flag + heuristic_flag + threshold_flag + tiebreak_flag
+    optional_flags = mode_flag + heuristic_flag + tiebreak_flag
     solve(domain, problem, optional_flags, mem_limit_gb=mem_limit_gb, output_path=output_path, keep_json=keep_json)

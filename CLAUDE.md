@@ -34,18 +34,21 @@ cd planner && cargo build --release   # or `cargo make`
 
 ```bash
 cd planner
-cargo run --release -- <problem.json> [--fixed|--flexible|--andstar-fond|--fixed-ld] [--ff|--add|--max|--lmcut] [--tiebreak policy-size|closure|combined] [--threshold N]
+cargo run --release -- <problem.json> [--fixed|--flexible|--andstar-fond|--fixed-ld] [--ff|--add|--max|--lmcut] [--tiebreak policy-size|closure|combined]
 ```
 
-No mode → `--flexible` (AO*). Heuristic flag is required by the binary (panics without
-one); `solve.py` defaults to `--ff`. `--tiebreak` only applies to `--andstar-fond`.
+No mode → `--flexible` (AO*). Heuristic flag is required by the binary (usage error,
+exit 2, without one); `solve.py` defaults to `--ff`. `--tiebreak` only applies to
+`--andstar-fond`. Any unrecognized argument (including a duplicate mode/heuristic
+flag) is refused with a named usage error on stderr and exit code 2 — flags are
+never silently ignored.
 Example JSON: `planner/test_domains/*.json`,
 `planner/src/domain_description/htn_domain/test_case.json`.
 
 ## Full pipeline
 
 ```bash
-python solve.py /path/domain.hddl /path/problem.hddl [mode] [heuristic] [--threshold N] [--tiebreak ...] [--mem-limit GB] [--output path] [--keep-json]
+python solve.py /path/domain.hddl /path/problem.hddl [mode] [heuristic] [--tiebreak ...] [--mem-limit GB] [--output path] [--keep-json]
 ```
 
 Requires `parser/pandaPIparser` and `grounder/pandaPIgrounder/pandaPIgrounder` already
