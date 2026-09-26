@@ -40,9 +40,6 @@ kp:Oracle
     kp:nounName "oracle" ;
     kp:hasVerb kp:OracleCompare .
 
-# This comparison is the Chesterton fence for replacing legacy serialization.
-# It compares two grounded JSON artifacts semantically; it does not execute or
-# mutate either pipeline.
 kp:OracleCompare
     a kp:Verb ;
     kp:verbName "compare" ;
@@ -51,4 +48,21 @@ kp:OracleCompare
     kp:returnType "crate::handlers::OracleReport" ;
     kp:rustParameters "    legacy_json: String,\n    candidate_json: String," ;
     kp:callArguments "legacy_json, candidate_json" ;
+    kp:selectOnly true .
+
+kp:Problem
+    a kp:Noun ;
+    kp:nounName "problem" ;
+    kp:hasVerb kp:ProblemSerialize .
+
+# First actual Python-retirement edge. This consumes PANDA's grounded format;
+# it does not claim that HDDL parsing or grounding is Rust-native.
+kp:ProblemSerialize
+    a kp:Verb ;
+    kp:verbName "serialize" ;
+    kp:about "Serialize one PANDA grounded problem to Koala grounded JSON using the pure-Rust serializer." ;
+    kp:handlerName "problem_serialize" ;
+    kp:returnType "koala_serializer::SerializationReport" ;
+    kp:rustParameters "    grounded_input: String,\n    output_json: String,\n    probability_map: Option<String>," ;
+    kp:callArguments "grounded_input, output_json, probability_map" ;
     kp:selectOnly true .

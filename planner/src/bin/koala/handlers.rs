@@ -1,3 +1,6 @@
+mod problem;
+pub use problem::problem_serialize;
+
 use clap_noun_verb::{NounVerbError, Result};
 use planner::{solve_json_path, Heuristic, SolveMode, SolveOptions, SolveReport, Tiebreaker};
 use serde::Serialize;

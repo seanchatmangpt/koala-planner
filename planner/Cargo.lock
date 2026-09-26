@@ -556,6 +556,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "koala-serializer"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "kqueue"
 version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -739,6 +747,7 @@ dependencies = [
  "bit-vec",
  "clap-noun-verb",
  "clap-noun-verb-macros",
+ "koala-serializer",
  "linkme",
  "rand",
  "regex",
