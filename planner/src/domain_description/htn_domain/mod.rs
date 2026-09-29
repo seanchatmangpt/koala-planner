@@ -6,4 +6,4 @@ pub use domain::FONDProblem;
 pub use task_defs::DomainTasks;
 use super::{HTN, PrimitiveAction, CompoundTask, Task};
 use super::Facts;
-pub use domain_reader::read_json_domain;
+pub use domain_reader::{read_json_domain, read_json_domain_str};

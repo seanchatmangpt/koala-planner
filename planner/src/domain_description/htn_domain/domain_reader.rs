@@ -46,8 +46,21 @@ struct RawMethod {
 }
 
 pub fn read_json_domain(path: &str) -> FONDProblem {
-    let istream = fs::read_to_string(path).expect("Unable to read file");
-    let domain: RawDomain = serde_json::from_str(&istream).unwrap();
+    let input = fs::read_to_string(path).expect("Unable to read file");
+    read_json_domain_str(&input).expect("Unable to parse grounded Koala JSON")
+}
+
+/// Parse the grounded JSON representation directly from memory.
+///
+/// This is the filesystem-free frontend used by embedding and WASM adapters.
+/// It intentionally consumes the *existing grounded JSON contract*; it does not
+/// claim to parse raw HDDL yet.
+pub fn read_json_domain_str(input: &str) -> Result<FONDProblem, serde_json::Error> {
+    let domain: RawDomain = serde_json::from_str(input)?;
+    Ok(raw_domain_to_problem(domain))
+}
+
+fn raw_domain_to_problem(domain: RawDomain) -> FONDProblem {
     // Process actions
     let mut actions = Vec::new();
     for (name, body) in domain.actions.into_iter() {
@@ -72,21 +85,22 @@ pub fn read_json_domain(path: &str) -> FONDProblem {
         let processed = (name, body.precond, effects, probabilities);
         actions.push(processed);
     }
-    // Processed methods
+
+    // Process methods
     let mut methods = vec![];
     for (name, method) in domain.methods.into_iter() {
         let processed_m = (name, method.task, method.subtasks, method.orderings);
         methods.push(processed_m);
     }
-    let problem = FONDProblem::new(
+
+    FONDProblem::new(
         domain.facts,
         actions,
         methods,
         domain.tasks,
         domain.initial_state,
         domain.initial_abstract_task,
-    );
-    problem
+    )
 }
 
 #[cfg(test)]
@@ -136,6 +150,15 @@ mod test {
         }
         assert_eq!(prim_counter, 45);
         assert_eq!(method_counter, 48);
+        assert_eq!(domain.initial_state.len(), 10);
+    }
+
+    #[test]
+    fn in_memory_reader_matches_file_reader_shape() {
+        let input = fs::read_to_string("src/domain_description/htn_domain/test_case.json").unwrap();
+        let domain = read_json_domain_str(&input).unwrap();
+        assert_eq!(domain.facts.count(), 20);
+        assert_eq!(domain.tasks.get_all_tasks().len(), 59);
         assert_eq!(domain.initial_state.len(), 10);
     }
 }

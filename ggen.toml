@@ -1,0 +1,34 @@
+# ggen.toml — Koala planner CLI authority
+#
+# RDF is authoritative for public noun/verb interface facts. Tera is terminal
+# projection only. The handwritten Rust handler retains planning behavior.
+
+[project]
+name = "koala-planner"
+version = "0.1.0"
+description = "Ontology-authoritative noun-verb interface over the Koala FOND-HTN planner core."
+
+[ontology]
+source = "ontology/koala-planner.ttl"
+base_iri = "https://seanchatmangpt.github.io/koala-planner/ontology#"
+
+[ontology.prefixes]
+kp = "https://seanchatmangpt.github.io/koala-planner/ontology#"
+rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+rdfs = "http://www.w3.org/2000/01/rdf-schema#"
+xsd = "http://www.w3.org/2001/XMLSchema#"
+
+[generation]
+output_dir = "."
+
+[[generation.rules]]
+name = "noun-verb-wrappers"
+query = { file = "queries/verb-signatures.rq" }
+template = { file = "templates/verb.rs.tera" }
+output_file = "planner/src/bin/koala/{{ noun_name }}.rs"
+mode = "Overwrite"
+skip_empty = true
+
+# ASK true is a violation.
+[validation]
+gates = ["gates/verb-contract.rq"]

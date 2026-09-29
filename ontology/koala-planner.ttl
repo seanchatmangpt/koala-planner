@@ -1,0 +1,68 @@
+@prefix kp: <https://seanchatmangpt.github.io/koala-planner/ontology#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+kp:Noun a rdfs:Class .
+kp:Verb a rdfs:Class .
+
+kp:nounName a rdf:Property .
+kp:verbName a rdf:Property .
+kp:about a rdf:Property .
+kp:handlerName a rdf:Property .
+kp:returnType a rdf:Property .
+kp:rustParameters a rdf:Property .
+kp:callArguments a rdf:Property .
+kp:selectOnly a rdf:Property .
+kp:hasVerb a rdf:Property .
+
+kp:Plan
+    a kp:Noun ;
+    kp:nounName "plan" ;
+    kp:hasVerb kp:PlanSolve .
+
+# The current public solve command is intentionally honest about its input:
+# it consumes the grounded JSON artifact produced by the legacy PANDA/Python
+# frontend. Raw HDDL becomes a later capability only after a Rust frontend has
+# differential evidence against that oracle.
+kp:PlanSolve
+    a kp:Verb ;
+    kp:verbName "solve" ;
+    kp:about "Solve one grounded Koala FOND-HTN problem through the typed Rust core." ;
+    kp:handlerName "plan_solve" ;
+    kp:returnType "planner::SolveReport" ;
+    kp:rustParameters "    grounded_json: String,\n    mode: Option<String>,\n    heuristic: Option<String>,\n    tiebreaker: Option<String>," ;
+    kp:callArguments "grounded_json, mode, heuristic, tiebreaker" ;
+    kp:selectOnly true .
+
+kp:Oracle
+    a kp:Noun ;
+    kp:nounName "oracle" ;
+    kp:hasVerb kp:OracleCompare .
+
+kp:OracleCompare
+    a kp:Verb ;
+    kp:verbName "compare" ;
+    kp:about "Compare legacy and candidate grounded JSON artifacts for semantic equality." ;
+    kp:handlerName "oracle_compare" ;
+    kp:returnType "crate::handlers::OracleReport" ;
+    kp:rustParameters "    legacy_json: String,\n    candidate_json: String," ;
+    kp:callArguments "legacy_json, candidate_json" ;
+    kp:selectOnly true .
+
+kp:Problem
+    a kp:Noun ;
+    kp:nounName "problem" ;
+    kp:hasVerb kp:ProblemSerialize .
+
+# First actual Python-retirement edge. This consumes PANDA's grounded format;
+# it does not claim that HDDL parsing or grounding is Rust-native.
+kp:ProblemSerialize
+    a kp:Verb ;
+    kp:verbName "serialize" ;
+    kp:about "Serialize one PANDA grounded problem to Koala grounded JSON using the pure-Rust serializer." ;
+    kp:handlerName "problem_serialize" ;
+    kp:returnType "koala_serializer::SerializationReport" ;
+    kp:rustParameters "    grounded_input: String,\n    output_json: String,\n    probability_map: Option<String>," ;
+    kp:callArguments "grounded_input, output_json, probability_map" ;
+    kp:selectOnly true .

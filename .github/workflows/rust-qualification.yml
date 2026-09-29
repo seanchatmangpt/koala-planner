@@ -1,0 +1,53 @@
+name: Rust qualification
+
+on:
+  pull_request:
+  push:
+    branches-ignore:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-wasip1
+
+      - name: Planner core
+        run: cargo test --manifest-path planner/Cargo.toml
+
+      - name: Agent CLI
+        shell: bash
+        run: |
+          if grep -q '^agent-cli' planner/Cargo.toml; then
+            cargo test --manifest-path planner/Cargo.toml --features agent-cli
+          else
+            echo 'agent-cli not present at this head'
+          fi
+
+      - name: Rust grounded serializer
+        shell: bash
+        run: |
+          if [[ -f crates/koala-serializer/Cargo.toml ]]; then
+            cargo test --manifest-path crates/koala-serializer/Cargo.toml
+          else
+            echo 'koala-serializer not present at this head'
+          fi
+
+      - name: WASM adapter tests
+        shell: bash
+        run: |
+          if [[ -f crates/koala-wasm/Cargo.toml ]]; then
+            cargo test --manifest-path crates/koala-wasm/Cargo.toml
+            cargo build --manifest-path crates/koala-wasm/Cargo.toml --target wasm32-wasip1 --release
+            test -s crates/koala-wasm/target/wasm32-wasip1/release/koala_wasm.wasm
+          else
+            echo 'koala-wasm not present at this head'
+          fi
