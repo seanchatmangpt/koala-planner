@@ -13,6 +13,8 @@ To solve a planning problem ```/path/to/file/problem.hddl``` in domain ```/path/
 
 ```python solve.py /path/to/file/doamin.hddl /path/to/file/problem.hddl```
 
+The planner binary requires a heuristic flag (```--ff```, ```--add```, ```--max``` or ```--lmcut```); without one it prints a usage error and exits with code 2 (```solve.py``` defaults to ```--ff```). Unknown arguments and duplicate mode/heuristic flags are likewise rejected with a named usage error on stderr and exit code 2 — flags are never silently ignored.
+
 # References
 [^1]: [Flexible FOND HTN Planning: A Complexity Analysis](https://bercher.net/publications/2022/Chen2022FlexibleFONDHTNs.pdf)
 
